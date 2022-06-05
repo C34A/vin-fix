@@ -272,7 +272,7 @@ int FileBuffer::ch_width(int offset)
 
 int FileBuffer::ch(int offset)
 {
-    data.get_ch(cur.offset + offset);
+    return data.get_ch(cur.offset + offset);
 }
 
 int& FileBuffer::offset()
