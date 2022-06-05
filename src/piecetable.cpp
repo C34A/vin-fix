@@ -1,7 +1,5 @@
 #include "piecetable.h"
 
-#include <unistd.h>
-
 Sequence::Sequence(const std::string& file_name)
     : offset(0), active(nullptr)
 {
@@ -13,7 +11,7 @@ Sequence::Sequence(const std::string& file_name)
     
     if (FILE* file_c = fopen(file_name.c_str(), "r")) {
         // determine file size
-        int fd = open(file_name.c_str(), O_RDONLY);
+        int fd = fileno(file_c);
         struct stat sb;
         fstat(fd, &sb);
         size = sb.st_size;
