@@ -2,6 +2,8 @@
 #include <cctype>
 #include <cassert>
 
+#include <stdexcept>
+
 #include "options.h"
 
 bool valid_number(const std::string& val)
@@ -55,7 +57,7 @@ Options::Options()
         {"cr_color",     {ValueType::COLOR,  "0x92A1A1"}},  // Caret Color
         {"ln_color",     {ValueType::COLOR,  "0x576E75"}},  // Line numbers Color
         {"gt_color",     {ValueType::COLOR,  "0x023641"}},  // Gutter Color
-        {"font_path",    {ValueType::STRING, "/usr/share/fonts/TTF/DejaVuSansMono.ttf"}},
+        {"font_path",    {ValueType::STRING, "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"}},
         {"font_family",  {ValueType::STRING, "DejaVu Sans Mono"}}, // Used if use_font_path is FALSE
         {"font_size",    {ValueType::INT,    "14"}},        // Font size
         {"tab_spaces",   {ValueType::INT,    "4"}},         // number of spaces to use for tabs

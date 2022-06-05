@@ -1,21 +1,33 @@
 #include "piecetable.h"
 
+#include <unistd.h>
+
 Sequence::Sequence(const std::string& file_name)
     : offset(0), active(nullptr)
 {
-    int fd = open(file_name.c_str(), O_RDONLY);
-    struct stat sb;
-    fstat(fd, &sb);
-    size = sb.st_size;
-    original = static_cast<const char*>(mmap(nullptr, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0));
-
     head = new Span{nullptr, 0, 0};
     tail = new Span{nullptr, 0, 0};
 
     tail->prev = head;
     head->next = tail;
+    
+    if (FILE* file_c = fopen(file_name.c_str(), "r")) {
+        // determine file size
+        int fd = open(file_name.c_str(), O_RDONLY);
+        struct stat sb;
+        fstat(fd, &sb);
+        size = sb.st_size;
+        // old code wasn't properly checking if the file exists
+        // original = static_cast<const char*>(mmap(nullptr, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0));
+        original = new char[size];
 
-    insert(tail, new Span{original, static_cast<size_t>(sb.st_size), true});
+        fread((void*)original, size, size, file_c);
+
+        fclose(file_c);
+
+        insert(tail, new Span{original, static_cast<size_t>(sb.st_size), true});
+
+    } else original = nullptr;
 
 //    head->next->next = tail;
 //    tail->prev = head->next;
@@ -24,7 +36,7 @@ Sequence::Sequence(const std::string& file_name)
 
 Sequence::~Sequence()
 {
-    // Nothing to do
+    delete original;
 }
 
 SpanRange Sequence::insert_char(std::size_t index, char ch)
